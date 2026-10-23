@@ -6,6 +6,8 @@ const authRoutes=require("./routes/authRoutes");
 const bloodInventory=require("./models/BloodInventory");
 const inventoryRoutes=require("./routes/inventoryRoute");
 const donationRoute=require("./routes/donatioRoutes")
+const requestRoute=require("./routes/requestRoutes")
+const statCounts=require("./routes/statsRoutes")
 
 connectDB().then(()=>bloodInventory.ensureAllGroups());
 const app=express();
@@ -18,7 +20,9 @@ app.get('/api/health',(req,res)=>{
 
 app.use('/api/auth',authRoutes);
 app.use('/api/inventory',inventoryRoutes);
-app.use('/api/donations',donationRoute)
+app.use('/api/donations',donationRoute);
+app.use('/api/requests',requestRoute);
+app.use('/api/stats',statCounts);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

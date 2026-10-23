@@ -1,0 +1,4 @@
+devendrajaiswal552_db_user
+SS1iwDlCprOQjfEC
+
+mongodb+srv://<db_username>:<db_password>@cluster0.ysxbtgk.mongodb.net/
