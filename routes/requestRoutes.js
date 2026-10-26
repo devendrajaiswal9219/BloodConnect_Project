@@ -6,7 +6,7 @@ const {
     getAllRequests,
     getRequestById,
     reviewRequest
-} = require('../controllers/bloodRequestController');
+} = require('../controllers/requestController');
 
 const { protect, authorize } = require('../middleware/auth');
 

@@ -7,6 +7,6 @@ const router=express.Router();
 router.use(protect);
 
 router.get("/",getInventory);
-routeer.patch("/:bloodGroup",authorize("admin"),adjustInventory);
+router.patch("/:bloodGroup",authorize("admin"),adjustInventory);
 
 module.exports=router;

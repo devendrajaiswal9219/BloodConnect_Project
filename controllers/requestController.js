@@ -1,4 +1,4 @@
-const BloodRequest = require('../models/BloodRequest');
+const BloodRequest = require('../models/Request');
 const BloodInventory = require('../models/BloodInventory');
 
 const createRequest = async (req, res, next) => {

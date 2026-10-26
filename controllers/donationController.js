@@ -42,7 +42,7 @@ const scheduleDonation=async(req,res,next)=>{
 }
 };
 
-const getMydonations=async(req,res,next)=>{
+const getMyDonations=async(req,res,next)=>{
     try{
         const donations=await Donation.find({donor:req.user._id}).sort({donationDate:-1});
         res.json({donations});
@@ -131,4 +131,4 @@ const cancelDonation = async (req, res, next) => {
     }
 };
         
-module.exports={scheduleDonation,getMydonations,getAllDonations,completeDonation,cancelDonation};
+module.exports={scheduleDonation,getMyDonations,getAllDonations,completeDonation,cancelDonation};

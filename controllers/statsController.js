@@ -1,10 +1,8 @@
 const User = require('../models/User');
 const Donation = require('../models/Donation');
-const BloodRequest = require('../models/BloodRequest');
+const BloodRequest = require('../models/Request');
 const BloodInventory = require('../models/BloodInventory');
-
-const BloodInventory = require('../models/BloodInventory');
-const User = require('../models/User');
+const user = require('../models/User');
 
 // @access Admin
 const getStats = async (req, res, next) => {
@@ -22,8 +20,8 @@ const getStats = async (req, res, next) => {
             inventory,
             totalUnitsAge
         ] = await Promise.all([
-            User.countDocuments({ role: 'donor' }),
-            User.countDocuments({ role: 'requester' }),
+            user.countDocuments({ role: 'donor' }),
+            user.countDocuments({ role: 'requester' }),
             Donation.aggregate([
                 {
                     $group: {

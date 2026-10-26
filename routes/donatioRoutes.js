@@ -1,4 +1,5 @@
-const express = require('express');
+const express = require('express')
+const { protect, authorize } = require('../middleware/auth');
 
 const {
     scheduleDonation,
@@ -6,9 +7,8 @@ const {
     getAllDonations,
     completeDonation,
     cancelDonation
-} = require('../middleware/donation');
+} = require('../controllers/donationController');
 
-const { authorize } = require('../middleware/auth');
 const router = express.Router();
 router.use(protect);
 router.post('/', scheduleDonation);
