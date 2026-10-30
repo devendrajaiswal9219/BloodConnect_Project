@@ -1,6 +1,7 @@
 require ('dotenv').config();
 const express=require("express");
 const connectDB=require("./config/db");
+const cors=require("cors");
 const {errorHandler,notFoundHandler}=require("./middleware/errorHandler");
 const authRoutes=require("./routes/authRoutes");
 const bloodInventory=require("./models/BloodInventory");
@@ -9,9 +10,12 @@ const donationRoute=require("./routes/donatioRoutes")
 const requestRoute=require("./routes/requestRoutes")
 const statCounts=require("./routes/statsRoutes")
 
+
+
 connectDB().then(()=>bloodInventory.ensureAllGroups());
 const app=express();
-const PORT=process.env.PORT || 8000;
+const allowedOrigins=(process.env.CLIENT_ORIGIN || 'http://localhost:8000').split(',')
+app.use(cors({origin:allowedOrigins, credentials:true}));
 
 app.use(express.json({limit:"1mb"}));
 app.get('/api/health',(req,res)=>{
