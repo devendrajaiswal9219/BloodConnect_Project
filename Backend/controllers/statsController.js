@@ -1,3 +1,4 @@
+
 const User = require('../models/User');
 const Donation = require('../models/Donation');
 const BloodRequest = require('../models/Request');
@@ -50,7 +51,7 @@ const getStats = async (req, res, next) => {
         res.json({
            donorCount,
            requesterCount,
-           totalUnitsAvailable: totalUnitsAgg[0]?.total || 0,
+           totalUnitsAvailable: totalUnitsAge[0]?.total || 0,
            donationsByStatus: donationStatusCounts.reduce(
            (acc, s) => ({
             ...acc,
