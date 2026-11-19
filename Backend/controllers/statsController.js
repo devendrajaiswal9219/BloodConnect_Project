@@ -38,7 +38,7 @@ const getStats = async (req, res, next) => {
                     }
                 }
             ]),
-            BloodInventory.find().toSorted({ bloodGroup: 1 }),
+            BloodInventory.find().sort({ bloodGroup: 1 }),
             BloodInventory.aggregate([
                 {
                     $group: {

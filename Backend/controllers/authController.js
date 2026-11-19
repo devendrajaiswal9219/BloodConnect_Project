@@ -13,7 +13,7 @@ const register=async(req,res,next)=>{
 
         const existingUser=await User.findOne({email:email.toLowerCase()});
         if(existingUser){
-            return res.status(400).json({messaage:"An account with this email already exists"});
+            return res.status(400).json({message:"An account with this email already exists"});
         }
 
         const userCount=await User.countDocuments();
