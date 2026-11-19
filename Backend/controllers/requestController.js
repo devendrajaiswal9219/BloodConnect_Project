@@ -38,8 +38,8 @@ const createRequest = async (req, res, next) => {
 
 const getMyRequests = async (req, res, next) => {
     try {
-        const requests = (await BloodRequest.find({ requester: req.user._id }))
-            .toSorted({ created: -1 });
+        const requests = await BloodRequest.find({ requester: req.user._id })
+            .sort({ createdAt: -1 });
 
         res.json({ requests });
     } catch (err) {
@@ -149,12 +149,11 @@ const reviewRequest = async (req, res, next) => {
                 bloodGroup: request.bloodGroup
             });
 
-            const available = inventory?.units ?? 0;
+            const available = Number(inventory?.unitsAvailable)|| 0;
 
             if (available < request.unitsRequested) {
                 return res.status(400).json({
-                    message: 'Not enough stock: only ${available} units of ${request.bloodGroup} available, ${request.unitsProduced}'
-                });
+                    message: 'Not enough stock: only ${available} units of ${request.bloodGroup} available'                });
             }
             await BloodInventory.findOneAndUpdate(
             { bloodGroup: request.bloodGroup },

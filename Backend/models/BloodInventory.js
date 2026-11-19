@@ -9,7 +9,7 @@ const bloodInventorySchema=new mongoose.Schema({
         unique:true,
     },
     unitsAvailable:{
-        type:String,
+        type:Number,
         required:true,
         default:0,
         min:0,

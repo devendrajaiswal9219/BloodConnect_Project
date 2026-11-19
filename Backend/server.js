@@ -10,11 +10,11 @@ const donationRoute=require("./routes/donatioRoutes")
 const requestRoute=require("./routes/requestRoutes")
 const statCounts=require("./routes/statsRoutes")
 
-
+const PORT = Number(process.env.PORT) || 5100;
 
 connectDB().then(()=>bloodInventory.ensureAllGroups());
 const app=express();
-const allowedOrigins=(process.env.CLIENT_ORIGIN || 'http://localhost:8000').split(',')
+const allowedOrigins=(process.env.CLIENT_ORIGIN || 'http://localhost:5173').split(',')
 app.use(cors({origin:allowedOrigins, credentials:true}));
 
 app.use(express.json({limit:"1mb"}));
