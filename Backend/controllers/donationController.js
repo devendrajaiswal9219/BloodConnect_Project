@@ -13,6 +13,7 @@ const scheduleDonation=async(req,res,next)=>{
     const {donationDate,units,location}=req.body;
     if(!donationDate){
         return res.status(400).json({message:"Donation date is required"});
+    }
     if(new Date(donationDate) < new Date(new Date().toDateString())){
         return res.status(400).json({message:"Donation date cannot be in the past"});
     }
