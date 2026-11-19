@@ -1,22 +1,26 @@
-import { createContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import api from '../api/axios';
-
-const AuthContext = createContext(null);
+import { AuthContext } from './auth';
 
 export function AuthProvider({ children }) {
 
     const [user, setUser] = useState(() => {
         const stored = localStorage.getItem("bbms_user");
-        return stored ? JSON.parse(stored) : null;
+        if (!stored) return null;
+        try {
+            return JSON.parse(stored);
+        } catch {
+            localStorage.removeItem("bbms_user");
+            return null;
+        }
     });
 
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(() => Boolean(localStorage.getItem('bbms_token')));
 
-       useEffect(() => {
+    useEffect(() => {
     const token = localStorage.getItem('bbms_token');
 
     if (!token) {
-        setLoading(false);
         return;
     }
 
@@ -39,7 +43,7 @@ export function AuthProvider({ children }) {
 }, []);
 
 const login = async (email, password) => {
-    const res = await api.get('/auth/login', {
+    const res = await api.post('/auth/login', {
         email,
         password
     });
@@ -74,12 +78,11 @@ const logout = () => {
                 user,
                 loading,
                 login,
-                register,logout
+                register,
+                logout
             }}
         >
             {children}
         </AuthContext.Provider>
     );
 }
-
-export const useAuth = () => useContext(AuthContext)

@@ -8,14 +8,17 @@ const donationSchema=new mongoose.Schema({
     bloodGroup:{
         type:String,enum:BLOOD_GROUPS,required:true,
     },
-    unitsDonated:{
-        type:Number,required:true,
+    donationDate:{
+        type:Date,required:true,
+    },
+    units:{
+        type:Number,required:true,min:1,max:5,
     },
     location:{
         type:String,trim:true,maxlength:150,default:'Main Blood Bank',
     },
     status:{
-        type:String,enum:["pending","approved","rejected"],default:"pending",
+        type:String,enum:["scheduled","completed","cancelled"],default:"scheduled",
     },
 },{
     timestamps:true,

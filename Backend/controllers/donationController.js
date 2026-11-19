@@ -14,13 +14,16 @@ const scheduleDonation=async(req,res,next)=>{
     if(!donationDate){
         return res.status(400).json({message:"Donation date is required"});
     }
+    if(new Date(donationDate) < new Date(new Date().toDateString())){
+        return res.status(400).json({message:"Donation date cannot be in the past"});
+    }
     if(!req.user.bloodGroup){
         return res.status(400).json({message:"Add blood group to your profile begore scheduling a donation"});
     }
 
     if(req.user.lastDonationDate){
         const daysSince=(Date.now()-new Date(req.user.lastDonationDate).getTime())/(1000*60*60*24);
-        const gap=MIN_GAP_DAYS;
+        const gap=MIN_GAP_DAYS();
         if(daysSince<gap){
             return res.status(400).json({
                 message:`You must wait ${Math.ceil(gap-daysSince)} more days before your next donation`
@@ -53,7 +56,7 @@ const getMyDonations=async(req,res,next)=>{
 
 const getAllDonations=async(req,res,next)=>{
     try{
-        const {status,bloodGroup,page=1,limit=10}=req.body;
+            const {status,bloodGroup,page=1,limit=10}=req.query;
         const filter={}
         if(status) filter.status=status;
         if(bloodGroup) filter.bloodGroup=bloodGroup;
@@ -63,7 +66,6 @@ const getAllDonations=async(req,res,next)=>{
 
         const [donations,total]=await Promise.all([
             Donation.find(filter).populate('donor','name email phone')
-            .populate('donor','name email phone')
             .sort({donationDate: -1})
             .skip((pageNum-1)*limitNum)
             .limit(limitNum),
@@ -82,9 +84,9 @@ const getAllDonations=async(req,res,next)=>{
     const completeDonation=async(req,res,next)=>{
         try{
             const donation=await Donation.findById(req.params.id);
-            if(!donation) return res.status(4040).json({message:'Donation not found'});
-            if(donation.status!=='Scheduled'){
-                return res.status(400).json({message:'Only scheduled donation can be marked compete'});
+            if(!donation) return res.status(404).json({message:'Donation not found'});
+            if(donation.status!=='scheduled'){
+                return res.status(400).json({message:'Only scheduled donations can be marked complete'});
             }
             donation.status='completed';
             await donation.save();
@@ -126,6 +128,9 @@ const cancelDonation = async (req, res, next) => {
                 message: 'Only scheduled donations can be cancelled'
             });
         }
+        donation.status = 'cancelled';
+        await donation.save();
+        res.json({ donation });
     } catch (err) {
         next(err);
     }
