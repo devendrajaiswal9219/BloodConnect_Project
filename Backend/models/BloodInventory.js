@@ -9,7 +9,7 @@ const bloodInventorySchema=new mongoose.Schema({
         unique:true,
     },
     unitsAvailable:{
-        type:String,
+        type:Number,
         required:true,
         default:0,
         min:0,
@@ -18,12 +18,12 @@ const bloodInventorySchema=new mongoose.Schema({
     timestamps:true,
 });
 
-bloodInventorySchema.static.ensureAllGroups=async function ensureAllGroups(){
+bloodInventorySchema.statics.ensureAllGroups=async function ensureAllGroups(){
     for(const bloodGroup of BLOOD_GROUPS){
         await this.findOneAndUpdate(
             {bloodGroup: bloodGroup},
             {$setOnInsert: {bloodGroup: bloodGroup, unitsAvailable: 0}},
-            {upsert: true, new: true}
+            {upsert: true, returnDocument: "after"}
         );
     }
 };
