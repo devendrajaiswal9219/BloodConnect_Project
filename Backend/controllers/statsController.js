@@ -37,34 +37,11 @@ const getStats = async (req, res, next) => {
                 }
             ]),
             BloodInventory.find().sort({ bloodGroup: 1 }),
-<<<<<<< HEAD
-            BloodInventory.aggregate([
-                {
-                    $group: {
-                        _id: null,
-                        total: { $sum: '$unitsAvailable' }
-                    }
-                }
-            ]),
-=======
->>>>>>> 6e45547 (Updated frontend and backend functionality)
         ]);
 
         const totalUnits = inventory.reduce((acc, curr) => acc + (curr.unitsAvailable || 0), 0);
 
         res.json({
-<<<<<<< HEAD
-           donorCount,
-           requesterCount,
-           totalUnitsAvailable: totalUnitsAge[0]?.total || 0,
-           donationsByStatus: donationStatusCounts.reduce(
-           (acc, s) => ({
-            ...acc,
-            [s._id]: s.count
-        }),
-        {}
-    ),
-=======
             donorCount,
             requesterCount,
             totalUnitsAvailable: totalUnits,
@@ -75,7 +52,6 @@ const getStats = async (req, res, next) => {
                 }),
                 {}
             ),
->>>>>>> 6e45547 (Updated frontend and backend functionality)
             requestsByStatus: requestStatusCounts.reduce(
                 (acc, s) => ({
                     ...acc,

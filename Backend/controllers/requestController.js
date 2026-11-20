@@ -56,13 +56,7 @@ const createRequest = async (req, res, next) => {
 
 const getMyRequests = async (req, res, next) => {
     try {
-<<<<<<< HEAD
-        const requests = await BloodRequest.find({ requester: req.user._id })
-            .sort({ createdAt: -1 });
-
-=======
         const requests = await BloodRequest.find({ requester: req.user._id }).sort({ createdAt: -1 });
->>>>>>> 6e45547 (Updated frontend and backend functionality)
         res.json({ requests });
     } catch (err) {
         next(err);
@@ -154,20 +148,12 @@ const reviewRequest = async (req, res, next) => {
                 { new: true }
             );
 
-<<<<<<< HEAD
-            const available = Number(inventory?.unitsAvailable)|| 0;
-
-            if (available < request.unitsRequested) {
-                return res.status(400).json({
-                    message: 'Not enough stock: only ${available} units of ${request.bloodGroup} available'                });
-=======
             if (!updatedInventory) {
                 const currentInv = await BloodInventory.findOne({ bloodGroup: request.bloodGroup });
                 const available = currentInv?.unitsAvailable ?? 0;
                 return res.status(400).json({
                     message: `Not enough stock: only ${available} units of ${request.bloodGroup} available, but ${request.unitsRequested} requested`
                 });
->>>>>>> 6e45547 (Updated frontend and backend functionality)
             }
         }
 
