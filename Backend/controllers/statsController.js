@@ -9,16 +9,14 @@ const getStats = async (req, res, next) => {
     try {
         await BloodInventory.ensureAllGroups();
 
-        const threshold =
-            Number(process.env.LOW_STOCK_THRESHOLD) || 10;
+        const threshold = Number(process.env.LOW_STOCK_THRESHOLD) || 10;
 
         const [
             donorCount,
             requesterCount,
             donationStatusCounts,
             requestStatusCounts,
-            inventory,
-            totalUnitsAge
+            inventory
         ] = await Promise.all([
             User.countDocuments({ role: 'donor' }),
             User.countDocuments({ role: 'requester' }),
@@ -39,6 +37,7 @@ const getStats = async (req, res, next) => {
                 }
             ]),
             BloodInventory.find().sort({ bloodGroup: 1 }),
+<<<<<<< HEAD
             BloodInventory.aggregate([
                 {
                     $group: {
@@ -47,8 +46,14 @@ const getStats = async (req, res, next) => {
                     }
                 }
             ]),
+=======
+>>>>>>> 6e45547 (Updated frontend and backend functionality)
         ]);
+
+        const totalUnits = inventory.reduce((acc, curr) => acc + (curr.unitsAvailable || 0), 0);
+
         res.json({
+<<<<<<< HEAD
            donorCount,
            requesterCount,
            totalUnitsAvailable: totalUnitsAge[0]?.total || 0,
@@ -59,26 +64,37 @@ const getStats = async (req, res, next) => {
         }),
         {}
     ),
+=======
+            donorCount,
+            requesterCount,
+            totalUnitsAvailable: totalUnits,
+            donationsByStatus: donationStatusCounts.reduce(
+                (acc, s) => ({
+                    ...acc,
+                    [s._id]: s.count
+                }),
+                {}
+            ),
+>>>>>>> 6e45547 (Updated frontend and backend functionality)
             requestsByStatus: requestStatusCounts.reduce(
-            (acc, s) => ({
-            ...acc,
-            [s._id]: s.count
-        }),
-        {}
-    ),
-
+                (acc, s) => ({
+                    ...acc,
+                    [s._id]: s.count
+                }),
+                {}
+            ),
             inventory: inventory.map((i) => ({
-            ...i.toObject(),
-            lowStock: i.unitsAvailable <= threshold
-    })),
-
+                ...i.toObject(),
+                units: i.unitsAvailable,
+                lowStock: (i.unitsAvailable || 0) <= threshold
+            })),
             lowStockGroups: inventory
-            .filter((i) => i.unitsAvailable < threshold)
-            .map((i) => i.bloodGroup)
-    });
-} catch (err) {
-    next(err);
-}
+                .filter((i) => (i.unitsAvailable || 0) < threshold)
+                .map((i) => i.bloodGroup)
+        });
+    } catch (err) {
+        next(err);
+    }
 };
 
 module.exports = { getStats };
