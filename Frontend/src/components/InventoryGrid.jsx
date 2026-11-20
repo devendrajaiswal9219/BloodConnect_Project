@@ -1,17 +1,20 @@
 export default function InventoryGrid({ items = [] }) {
-    if (!items.length) {
-        return <p className="muted">Inventory data is not available yet.</p>;
-    }
+    const inventoryByGroup = new Map(items.map((item) => [item.bloodGroup, item]));
+    const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
     return (
          <div className="inventory-grid">
-            {items.map((item) => (
+            {bloodGroups.map((bloodGroup) => {
+                const item = inventoryByGroup.get(bloodGroup);
+                const outOfStock = item && Number(item.unitsAvailable) === 0;
+                return (
                 <div
-                    key={item.bloodGroup}
-                    className={`inventory-card ${item.lowStock ? "low-stock" : ""}`}>
-                    <span className="inventory-group">{item.bloodGroup}</span>
-                    <span className="inventory-amount">{item.unitsAvailable}<small>Units</small>{item.lowStock && <span className="low-stock-label">Low stock</span>}</span>
-            </div>
-            ))}
+                    key={bloodGroup}
+                    className={`inventory-card ${item?.lowStock ? "low-stock" : ""} ${outOfStock ? "out-of-stock" : ""}`}>
+                    <span className="inventory-group">{bloodGroup}</span>
+                    <span className="inventory-amount">{item ? item.unitsAvailable : '—'}<small>Units available</small><span className={`inventory-status ${!item ? 'status-unknown' : outOfStock ? 'status-empty' : item.lowStock ? 'status-limited' : 'status-ready'}`}>{!item ? 'Not reported' : outOfStock ? 'Out of stock' : item.lowStock ? 'Limited' : 'Available'}</span></span>
+                </div>
+                );
+            })}
         </div>
     );
 }
