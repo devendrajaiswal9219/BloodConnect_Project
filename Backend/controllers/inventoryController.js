@@ -1,7 +1,7 @@
-const bloodInventory=require("../models/BloodInventory");
-
-const getInventory=async(req,res,next)=>{
-    try{
+const bloodInventory = require("../models/BloodInventory");
+const { BLOOD_GROUPS } = require("../config/constant");
+const getInventory = async (req, res, next) => {
+    try {
         await bloodInventory.ensureAllGroups();
         const inventory=await bloodInventory.find().sort({bloodGroup:1});
         const threshold=Number(process.env.LOW_STOCK_THRESHOLD) || 10;
